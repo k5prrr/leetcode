@@ -3,26 +3,23 @@
 если в мапу добавляется больше слов, чем лимит, она должна удалять старые записи
 */
 
-
 package main
 
 import (
 	"fmt"
 )
 
-
 type WordCounter struct {
 	counts map[string]int
-	limit int
-	
+	limit  int
+
 	words []string
 }
 
-
 func NewWordCounter(limit int) *WordCounter {
-	return &WordCounter {
-		counts:make(map[string]int),
-		limit: limit,
+	return &WordCounter{
+		counts: make(map[string]int),
+		limit:  limit,
 	}
 }
 
@@ -30,14 +27,13 @@ func (wc *WordCounter) AddWord(word string) {
 	wc.counts[word]++
 	wc.words = append(wc.words, word)
 
-	if (len(wc.counts) < wc.limit) {
+	if len(wc.counts) < wc.limit {
 		return
 	}
 
 	delete(wc.counts, wc.words[0])
 	wc.words = wc.words[1:]
 }
-
 
 func main() {
 	wc := NewWordCounter(3)
