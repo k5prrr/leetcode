@@ -9,3 +9,9 @@ let mk = ``.split("\n").reduce((acc, s) => {acc[s]=true;return acc}, {})
 2 на кого подп
 ``.split("\n").filter(s => !mk[s]).map((s, i) => `${i+1} https://github.com/${s}`).join("\n")
 
+- - -
+
+let mk = Array.from(document.getElementById("user-profile-frame").getElementsByClassName("Link--secondary")).map(ob => ob.innerHTML).reduce((acc, s) => {acc[s]=true;return acc}, {})
+
+
+Array.from(document.getElementById("user-profile-frame").getElementsByClassName("Link--secondary")).map(ob => ob.innerHTML).filter(s => !mk[s]).map((s, i) => `${i+1} https://github.com/${s}`).join("\n")
