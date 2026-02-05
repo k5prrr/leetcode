@@ -34,7 +34,7 @@ import (
 )
 
 // My Not Optim
-func canJump(nums []int) bool {
+func canJump0(nums []int) bool {
 	fmt.Printf("%v\n", nums)
 
 	len0 := len(nums)
@@ -51,7 +51,7 @@ func canJump(nums []int) bool {
 	return false
 }
 
-func canJumpGpt(nums []int) bool {
+func canJump1(nums []int) bool {
 	maxReach := 0
 	n := len(nums)
 
@@ -72,6 +72,23 @@ func max(a, b int) int {
 		return a
 	}
 	return b
+}
+
+// my 2
+func canJump(nums []int) bool {
+	balance := 0
+
+	for _, n := range nums {
+		if balance < 0 {
+			return false
+		}
+		if n > balance {
+			balance = n
+		}
+		balance--
+	}
+
+	return true
 }
 
 func main() {
