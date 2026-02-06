@@ -20,6 +20,7 @@ func (c *CreditCardProcessor) Process(amount float64) error {
 		return errors.New("Limit!")
 	}
 	fmt.Printf("%.2f using\n")
+	c.limit -= amount
 
 	return nil
 }
@@ -36,6 +37,7 @@ func (p *PayPalProcessor) Process(amount float64) error {
 		return errors.New("Balance!")
 	}
 	fmt.Printf("%.2f using\n")
+	p.balance -= amount
 
 	return nil
 }
@@ -55,6 +57,7 @@ func ExecutePayment(processor PaymentProcessor, amount float64) {
 }
 
 func main() {
+	/*// Было
 	creditCard := CreditCardProcessor{limit: 100.0}
 	payPal := PayPalProcessor{balance: 200.0}
 
@@ -62,6 +65,17 @@ func main() {
 	ExecutePayment(&creditCard, 50.0)
 
 	ExecutePayment(&payPal, 150.0)
+	ExecutePayment(payPal, 150.0)
+	//*/
+
+	creditCard := &CreditCardProcessor{limit: 100.0}
+	payPal := &PayPalProcessor{balance: 200.0}
+
+	ExecutePayment(creditCard, 50.0)
+	ExecutePayment(creditCard, 50.0)
+
+	ExecutePayment(payPal, 150.0)
+	ExecutePayment(payPal, 150.0)
 	ExecutePayment(payPal, 150.0)
 
 }
