@@ -11,7 +11,10 @@ let mk = ``.split("\n").reduce((acc, s) => {acc[s]=true;return acc}, {})
 
 - - -
 
-let mk = Array.from(document.getElementById("user-profile-frame").getElementsByClassName("Link--secondary")).map(ob => ob.innerHTML).reduce((acc, s) => {acc[s]=true;return acc}, {})
+followers
+Array.from(document.getElementById("user-profile-frame").getElementsByClassName("Link--secondary")).map(ob => ob.innerHTML).join("\n")
 
 
+let followers = ``
+let mk = followers.split("\n").reduce((acc, s) => {acc[s]=true;return acc}, {})
 Array.from(document.getElementById("user-profile-frame").getElementsByClassName("Link--secondary")).map(ob => ob.innerHTML).filter(s => !mk[s]).map((s, i) => `${i+1} https://github.com/${s}`).join("\n")
