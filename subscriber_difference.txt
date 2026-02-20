@@ -18,3 +18,16 @@ Array.from(document.getElementById("user-profile-frame").getElementsByClassName(
 let followers = ``
 let mk = followers.split("\n").reduce((acc, s) => {acc[s]=true;return acc}, {})
 Array.from(document.getElementById("user-profile-frame").getElementsByClassName("Link--secondary")).map(ob => ob.innerHTML).filter(s => !mk[s]).map((s, i) => `${i+1} https://github.com/${s}`).join("\n")
+
+
+пирагова 12
+14 30
+
+
+паспорт
+инн
+
+категор физ лицо
+фин отдел
+приём деклорации
+
