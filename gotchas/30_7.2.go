@@ -10,36 +10,66 @@ package main
 */
 package main
 
-import "sync"
+import (
+	"fmt"
+	"hash/fnv"
+	"math/rand"
+	"sync"
+	"sync/atomic"
+	"time"
+)
 
 type Cache interface {
 	Set(key, value string)
 	Get(key string) (string, bool)
 }
 
-type MyCache struct {
+type Shard struct {
 	data map[string]string
 	mu   sync.RWMutex
 }
+type MyCache struct {
+	shards []*Shard
+}
 
 func NewMyCache(initSize int64) *MyCache {
+	shards := make([]*Shard, initSize)
+
+	for i := range shards {
+		shards[i] = &Shard{
+			data: make(map[string]string),
+		}
+	}
+
 	return &MyCache{
-		data: make(map[string]string, initSize),
+		shards: shards,
 	}
 }
 
-func (c *MyCache) Set(key, value string) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
+func (c *MyCache) getShard(key string) *Shard {
+	hasher := fnv.New32a()
+	_, _ = hasher.Write([]byte(key))
+	hash := hasher.Sum32()
 
-	c.data[key] = value
+	return c.shards[hash%uint32(len(c.shards))]
+}
+
+func (c *MyCache) Set(key, value string) {
+	shard := c.getShard(key)
+
+	shard.mu.Lock()
+	defer shard.mu.Unlock()
+
+	shard.data[key] = value
 }
 
 func (c *MyCache) Get(key string) (string, bool) {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
+	shard := c.getShard(key)
 
-	val, ok := c.data[key]
+	shard.mu.RLock()
+	defer shard.mu.RUnlock()
+
+	val, ok := shard.data[key]
 
 	return val, ok
 }
@@ -114,8 +144,7 @@ func main() {
 	}()
 	wg.Wait()
 
-	fmt.Printf("\n--- Результаты стресс-теста ---\n"+
-		"Длительность:        %v\n"+
+	fmt.Printf("\nДлительность:        %v\n"+
 		"Горутины (запись):   %d\n"+
 		"Горутины (чтение):   %d\n"+
 		"Операций записи:     %d\n"+
