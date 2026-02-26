@@ -8,6 +8,11 @@
  */
 package main
 
+import (
+	"fmt"
+	"math/rand"
+)
+
 type Transaction struct {
 	ID int64
 	Amount int64 // Хранение в копейках
@@ -33,7 +38,7 @@ func convertTransactions(in <- chan Transaction) <-chan Transaction {
 
 	go func() {
 		for tr := range in {
-			tr.Amount *= 0.8
+			tr.Amount = int64(float64(tr.Amount) * 0.8)
 			out <- tr
 		}
 
@@ -42,13 +47,34 @@ func convertTransactions(in <- chan Transaction) <-chan Transaction {
 
 	return out
 }
+func generateTransactions(count int) <-chan Transaction {
+	out := make(chan Transaction)
 
-func saveTransactions(in <- chan Transaction) {
 	go func() {
-		for tr := range in {
-			fmt.Printf("Transaction ID: %d, Amount: %.2\n", tr.ID, tr.Amount)
+		for i := 0; i< count; i++ {
+			out <- Transaction{
+				ID: int64(i),
+				Amount: rand.Int63(),
+			}
 		}
+
+		close(out)
 	}()
+
+	return out
+}
+func showTransactions(in <- chan Transaction) {
+
+	for tr := range in {
+		fmt.Printf("Transaction ID: %d, Amount: %d\n", tr.ID, tr.Amount)
+	}
+	fmt.Println("end")
 }
 
-func main() {}
+func main() {
+	transactions := generateTransactions(10)
+	filtered := filterTransactions(transactions)
+	converted := convertTransactions(filtered)
+	showTransactions(converted)
+
+}
