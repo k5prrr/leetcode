@@ -1,4 +1,6 @@
 /*
+https://www.youtube.com/@skillissueru/videos
+
 wg := &sync.WaitGroup{}
 wd.Add(1)
 wg.Done()
