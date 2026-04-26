@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Яндекс Карта с магазинами</title>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=________&lang=ru_RU"></script>
+    <style>
+        * { margin: 0; padding: 0; }
+        html, body { width: 100%; height: 100%; }
+        #map { width: 100%; height: 100vh; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+		// https://developer.tech.yandex.ru/keys
+        const shops = [
+            {
+                coords: [55.751244, 37.577447],
+                name: "Магазин «Продукты 24»",
+                address: "г. Москва, ул. Арбат, д. 1",
+                description: "Круглосуточный продуктовый магазин"
+            },
+            {
+                coords: [55.753215, 37.622504],
+                name: "ТЦ «Галерея»",
+                address: "г. Москва, ул. Тверская, д. 15",
+                description: "Торговый центр с одеждой и обувью"
+            },
+            {
+                coords: [55.738743, 37.592123],
+                name: "Книжный мир",
+                address: "г. Москва, ул. Пятницкая, д. 32",
+                description: "Большой выбор книг и канцтоваров"
+            },
+            {
+                coords: [55.760180, 37.644860],
+                name: "Электроника Плюс",
+                address: "г. Москва, ул. Мясницкая, д. 24",
+                description: "Магазин электроники и гаджетов"
+            },
+            {
+                coords: [55.744000, 37.628300],
+                name: "Кофейня «Бодрость»",
+                address: "г. Москва, ул. Новокузнецкая, д. 7",
+                description: "Уютная кофейня с десертами"
+            }
+        ];
+
+        ymaps.ready(init);
+
+        function init() {
+            const map = new ymaps.Map('map', {
+                center: [55.751244, 37.577447],
+                zoom: 13,
+                controls: ['zoomControl', 'fullscreenControl']
+            });
+
+            shops.forEach(shop => {
+                const placemark = new ymaps.Placemark(shop.coords, {
+                    balloonContentHeader: shop.name,
+                    balloonContentBody: `
+                        <b>Адрес:</b> ${shop.address}<br>
+                        <b>Описание:</b> ${shop.description}
+                    `,
+                    hintContent: shop.name
+                }, {
+                    preset: 'islands#redStretchyIcon',
+                    iconCaption: shop.name
+                });
+
+                map.geoObjects.add(placemark);
+            });
+        }
+    </script>
+</body>
+</html>
